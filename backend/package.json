@@ -1,0 +1,37 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint src",
+    "dev": "tsx --tsconfig tsconfig.dev.json --watch src/index.ts",
+    "build": "tsc -p tsconfig.prod.json",
+    "start": "node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "mongoose": "^8.18.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-base-typescript": "^1.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-unused-imports": "^4.2.0",
+    "globals": "^16.4.0",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
