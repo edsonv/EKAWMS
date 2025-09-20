@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "backend:dev": "npm run backend/index.ts"
+    "backend:dev": "npm run backend/src/index.ts"
   },
   "repository": {
     "type": "git",
