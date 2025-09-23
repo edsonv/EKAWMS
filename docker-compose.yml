@@ -10,8 +10,8 @@ services:
       # Opcional: ajusta locales mínimos para reducir tamaño de datos
       LANG: C.UTF-8
     volumes:
-      - ./databases/pg-data:/var/lib/postgresql/data
-      - ./pg-entrypoint:/docker-entrypoint-initdb.d:ro
+      - ./databases/pg/data:/var/lib/postgresql/data
+      - ./databases/pg/entrypoint:/docker-entrypoint-initdb.d:ro
 
     ports:
       - "5432:5432"
@@ -32,8 +32,8 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-appdb}
     command: ["--bind_ip_all", "--wiredTigerCacheSizeGB", "1"]
     volumes:
-      - ./databases/mongodb-data:/data/db
-      - ./mongodb-entrypoint:/docker-entrypoint-initdb.d:ro
+      - ./databases/mongodb/data:/data/db
+      - ./databases/mongodb/entrypoint:/docker-entrypoint-initdb.d:ro
     ports:
       - "27017:27017"
     healthcheck:
@@ -45,20 +45,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  api:
-    build: ./backend
-    container_name: api
-    restart: unless-stopped
-    environment:
-      MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/workshop?authSource=admin
-      PORT: 3001
-    ports:
-      - "3001:3001"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
+
+  # api:
+  #   build: ./backend
+  #   container_name: api
+  #   restart: unless-stopped
+  #   environment:
+  #     MONGO_URI: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/workshop?authSource=admin
+  #     PORT: 3001
+  #   ports:
+  #     - "3001:3001"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     mongodb:
+  #       condition: service_healthy
 
 # (Opcional) red dedicada
 networks:
