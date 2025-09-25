@@ -1,14 +1,16 @@
 import cors from "cors";
-import "dotenv/config";
+import * as dotenv from "dotenv";
 import express from "express";
 import { connectMongo } from "./db";
-import { quick } from "./routes/quick";
+import { client } from "./routes/client";
+
+dotenv.config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", quick);
+app.use("/api/client", client);
 
 const PORT = Number(process.env.PORT || 3001);
 const MONGO_URI = process.env.MONGO_URI as string;

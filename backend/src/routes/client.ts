@@ -2,47 +2,53 @@ import express from "express";
 import { Client } from "../models/client";
 import { Vehicle } from "../models/vehicle";
 
-export const quick = express.Router();
+export const client = express.Router();
 
-quick.post("/create/client-vehicle", async (req, res) => {
+client.post("/create", async (req, res) => {
   try {
     const { client, vehicle } = req.body || {};
-    if (!client?.name || !vehicle?.plate) {
+    if (!client?.fullName || !client?.phone || !vehicle?.plate) {
       return res
         .status(400)
         .json({ ok: false, error: "Faltan campos obligatorios" });
     }
 
     // 1) Cliente (find or create)
-    const phone0 = (client.phones?.[0] || "").trim();
-    const findClient = phone0
-      ? { name: client.name.trim(), phones: { $in: [phone0] } }
-      : { name: client.name.trim() };
-    let cli = await Client.findOne(findClient);
+    let cli = await Client.findOne({
+      $or: [
+        { fullName: client.fullName },
+        { phone: client.phone },
+        { "vehicles.plate": vehicle.plate },
+      ],
+    });
+
     if (!cli) {
       cli = await Client.create({
-        name: client.name.trim(),
-        phones: client.phones || [],
+        fullName: client.fullName,
+        phone: client.phone,
+        email: client.email || null,
+        docId: client.docId || null,
       });
     }
 
     // 2) Vehículo (placa única)
     const veh = await Vehicle.create({
       clientId: cli._id,
-      plate: vehicle.plate.trim(),
-      brand: vehicle.brand || null,
+      plate: vehicle.plate,
+      make: vehicle.make || null,
       model: vehicle.model || null,
       year: vehicle.year || null,
+      notes: vehicle.notes || null,
     });
 
     // 3) Cache ligero (best-effort)
     await Client.updateOne(
-      { _id: cli._id, "vehicles.vehicleId": { $ne: veh._id } },
+      { _id: cli._id, "vehicles.plate": { $ne: veh.plate } },
       {
         $push: {
           vehicles: {
-            vehicleId: veh._id,
             plate: veh.plate,
+            make: veh.make,
             model: veh.model,
             year: veh.year,
           },
@@ -62,3 +68,15 @@ quick.post("/create/client-vehicle", async (req, res) => {
       .json({ ok: false, error: e.message || "Error interno" });
   }
 });
+client.post("/clients", async (req, res) =>
+  res.json(await Client.create(req.body)),
+);
+client.get("/clients", async (req, res) =>
+  res.json(await Client.find().limit(50)),
+);
+client.post("/vehicles", async (req, res) =>
+  res.json(await Vehicle.create(req.body)),
+);
+client.get("/vehicles", async (req, res) =>
+  res.json(await Vehicle.find().limit(50)),
+);

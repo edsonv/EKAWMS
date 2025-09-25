@@ -10,7 +10,7 @@ const VehicleSchema = new Schema(
       uppercase: true,
       trim: true,
     },
-    brand: { type: String, default: null },
+    make: { type: String, default: null },
     model: { type: String, default: null },
     year: { type: Number, default: null },
     notes: { type: String, default: "" },

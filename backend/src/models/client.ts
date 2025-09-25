@@ -1,9 +1,9 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 
 const ClientVehicleLight = new Schema(
   {
-    vehicleId: { type: Types.ObjectId, ref: "Vehicle" },
     plate: String,
+    make: String,
     model: String,
     year: Number,
   },
@@ -12,8 +12,8 @@ const ClientVehicleLight = new Schema(
 
 export const ClientSchema = new Schema(
   {
-    name: { type: String, required: true, trim: true },
-    phones: [{ type: String, trim: true }],
+    fullName: { type: String, required: true, trim: true },
+    phone: { type: String, trim: true },
     email: { type: String, default: null },
     docId: { type: String, default: null },
     vehicles: [ClientVehicleLight],
@@ -22,8 +22,6 @@ export const ClientSchema = new Schema(
 );
 
 ClientSchema.index({ name: 1 });
-ClientSchema.index({ phones: 1 });
+ClientSchema.index({ phone: 1 });
 
 export const Client = model("Client", ClientSchema);
-
-
