@@ -1,0 +1,50 @@
+scalar DateTime
+
+interface BaseModel {
+  _id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type VehicleLight {
+  vehicleId: ID!
+  plate: String
+  make: String
+  model: String
+  year: Int
+}
+
+type Client {
+  _id: ID!
+  fullName: String!
+  phone: String!
+  docId: String
+  email: String
+  vehicles: [VehicleLight!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  clients: [Client]
+  client(id: ID!): Client
+}
+
+type Mutation {
+  createClientAndVehicle(client: ClientInput!, vehicle: VehicleInput!):Client
+}
+
+input ClientInput {
+  fullName: String!
+  phone: String!
+  docId: String
+  email: String
+}
+
+input VehicleInput {
+  plate: String!
+  make: String
+  model: String
+  year: Int
+  notes: String
+}

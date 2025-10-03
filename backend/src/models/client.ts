@@ -1,7 +1,8 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 const ClientVehicleLight = new Schema(
   {
+    vehicleId: { type: Types.ObjectId, ref: "Vehicle", required: true },
     plate: String,
     make: String,
     model: String,
@@ -23,5 +24,6 @@ export const ClientSchema = new Schema(
 
 ClientSchema.index({ name: 1 });
 ClientSchema.index({ phone: 1 });
+ClientSchema.index({ "vehicles.plate": 1 });
 
 export const Client = model("Client", ClientSchema);

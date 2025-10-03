@@ -1,0 +1,23 @@
+scalar DateTime
+
+interface BaseModel {
+  _id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Vehicle implements BaseModel {
+  _id: ID!
+  plate: String!
+  make: String
+  model: String
+  year: Int
+  notes: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Query {
+  getVehicles: [Vehicle]
+  getVehicleById(id: ID!): Vehicle
+}

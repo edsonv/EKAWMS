@@ -5,6 +5,7 @@
     "target": "ESNext",
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    // "types": ["node"],
 
     "sourceMap": true,
     "outDir": "dist",

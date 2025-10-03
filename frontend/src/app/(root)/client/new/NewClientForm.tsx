@@ -1,7 +1,8 @@
 "use client";
-import { createClient } from "@/actions/client/createClient";
+import { CREATE_CLIENT_AND_VEHICLE } from "@/actions/client/CREATE_CLIENT_AND_VEHICLE";
 import { InlineInput, TInlineInput } from "@/components/InlineInput";
 import { IClient, IVehicle } from "@/types";
+import { useMutation } from "@apollo/client/react";
 import { ChangeEvent, useState } from "react";
 
 type TNewClientForm = {
@@ -33,17 +34,21 @@ const initialState: TNewClientForm = {
 };
 
 export const NewClientForm = () => {
+  const [createClientAndVehicle, { data }] = useMutation(
+    CREATE_CLIENT_AND_VEHICLE
+  );
   const [values, setValues] = useState<TNewClientForm>(initialState);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setValues({ ...values, [name as keyof TNewClientForm]: value });
   }
+
   function handleReset() {
     setValues(initialState);
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const client = (): Omit<IClient, "vehicles"> => {
       const { fullName, phone, email, docId } = values;
 
@@ -51,14 +56,15 @@ export const NewClientForm = () => {
     };
     const vehicle = (): Omit<IVehicle, "clientId" | "notes"> => {
       const { plate, make, model, year } = values;
-      return { plate, make, model, year };
+      return { plate, make, model, year: Number(year) };
     };
-    createClient(client(), vehicle()).then((r) => {
-      console.log(r);
-      if (r.ok) {
-        handleReset();
-      }
+    await createClientAndVehicle({
+      variables: { client: client(), vehicle: vehicle() },
     });
+    if (data) {
+      alert("Cliente y vehículo creados con éxito");
+      handleReset();
+    }
   };
 
   const clientFields: TFormField[] = [

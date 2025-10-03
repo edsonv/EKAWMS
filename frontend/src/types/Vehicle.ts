@@ -3,6 +3,6 @@ export interface IVehicle {
   plate: string;
   make?: string | null;
   model?: string | null;
-  year?: string | null;
+  year?: number | null;
   notes: string;
 }

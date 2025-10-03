@@ -5,6 +5,7 @@ type IVehicleLight = Pick<IVehicle, "plate" | "make" | "model" | "year"> & {
 };
 
 interface IClient {
+  _id?: string;
   fullName: string;
   phone: string;
   email?: string | null;
